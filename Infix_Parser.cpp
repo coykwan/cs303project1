@@ -8,8 +8,8 @@ using std::string;
 using std::istringstream;
 using std::isdigit;
 
-const string Infix_Parser::OPERATORS = "+-*/%()[]{}";
-const int Infix_Parser::PRECEDENCE[] = { 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1 };
+const string Infix_Parser::OPERATORS = "+-*/%()[]{}^";
+const int Infix_Parser::PRECEDENCE[] = { 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1, 3};
 
 //*******************************************************************
 // THIS NEEDS A DEFINITION
@@ -48,20 +48,23 @@ void Infix_Parser::eval_op(char op)
   switch(op)
   {
   case '+' :
-	  result = lhs + rhs;
-      break;
+	result = lhs + rhs;
+      	break;
   case '-' :
-	  result = lhs - rhs;
-      break;
+	result = lhs - rhs;
+      	break;
   case '*' :
-	  result = lhs * rhs;
-	  break;
+	result = lhs * rhs;
+	break;
   case '/' :
-	  result = lhs / rhs;
-	  break;
+	result = lhs / rhs;
+	break;
   case '%' :
-	  result = lhs % rhs;
-	  break;
+	result = lhs % rhs;
+	break;
+   case '^' :
+    	result = pow(lhs, rhs);
+    	break;
 		  //************************************************************************
 		  //NEED TO ADD OTHER OPERATORS HERE!!!!
 		  //Probably going to want to have a check for Binary vs Unary operators
