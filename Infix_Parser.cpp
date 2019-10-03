@@ -11,12 +11,23 @@ using std::isdigit;
 const string Infix_Parser::OPERATORS = "+-*/%()[]{}";
 const int Infix_Parser::PRECEDENCE[] = { 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1 };
 
+    bool is_infix(expression)
+    {
+    }
+//*******************************************************************
+// THIS NEEDS A DEFINITION
+// A function to check if the expression meets infix syntax
+// if it does not, an appropriate exception will be thrown
+// if it does, true is returned.
+//******************************************************************
+
 /** Evaluates the current operator.
     This function pops the two operands off the operand
     stack and applies the operator.
     @param op A character representing the operator
     @throws Syntax_Error if top is attempted on an empty stack
 */
+
 void Infix_Parser::eval_op(char op)
 {
 
@@ -62,6 +73,8 @@ void Infix_Parser::eval_op(char op)
 
 int Infix_Parser::eval(const std::string& expression)
 {
+	is_infix(expression); //checks if the expression is infix. if it isn't, an exception will be thrown.
+	
   // Be sure both stacks are empty
   while (!operand_stack.empty())
     operand_stack.pop();
