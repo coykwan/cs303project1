@@ -11,6 +11,12 @@ using std::isdigit;
 const string Infix_Parser::OPERATORS = "+-*/%()[]{}";
 const int Infix_Parser::PRECEDENCE[] = { 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1 };
 
+/** Evaluates the current operator.
+    This function pops the two operands off the operand
+    stack and applies the operator.
+    @param op A character representing the operator
+    @throws Syntax_Error if top is attempted on an empty stack
+*/
 void Infix_Parser::eval_op(char op)
 {
 
@@ -43,6 +49,11 @@ void Infix_Parser::eval_op(char op)
   case '%' :
 	  result = lhs % rhs;
 	  break;
+		  //************************************************************************
+		  //NEED TO ADD OTHER OPERATORS HERE!!!!
+		  //Probably going to want to have a check for Binary vs Unary operators
+		  //And set up another switch case for the unary ones!
+		  //************************************************************************
   }
   operand_stack.push(result);
 }
@@ -63,7 +74,7 @@ int Infix_Parser::eval(const std::string& expression)
   char next_token;
   while (tokens >> next_token)
   {
-	  if (isdigit(next_token)) //really we want this to be if it's a binary operator
+	  if (isdigit(next_token))
 	  {
 		  int operand = next_token - '0';
 		  this -> operand_stack.push(operand);
@@ -78,10 +89,7 @@ int Infix_Parser::eval(const std::string& expression)
 	  }
   }
 
- // std::cout << this -> operand_stack.top();
-
   // Process remaining operators and their respective operands
-    //** CHANGE THIS
   while (!operator_stack.empty())
   {
       char op = operator_stack.top();
@@ -117,7 +125,7 @@ void Infix_Parser::process_operator(char op)
   }
 
   //If the stack is not empty and the precedence of op is higher than the top, push the op
-  // ****while op is <= top, eval the corresponding operands to the operator
+  // while op is <= top, eval the corresponding operands to the operator
   // This creates a stack of decreasing precedence
   else
   {
@@ -137,7 +145,6 @@ void Infix_Parser::process_operator(char op)
       {
     	eval_op(operator_stack.top());
         operator_stack.pop();
-        //THIS IS WHERE WE WANT TO EVALUATE THE OPERAND STACK USING THE OPERATOR(S)
       }
       // assert: Operator stack is empty or
       //         top of stack is '(' or current
