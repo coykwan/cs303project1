@@ -55,6 +55,11 @@ private:
         @throws Syntax_Error if top is attempted on an empty stack
     */
     void eval_op(char op);
+	
+    bool is_infix(const std::string& expression);
+	//**********************************************************
+	//Need a function to check if the input expression is infix
+	//**********************************************************
 
 public:
 
