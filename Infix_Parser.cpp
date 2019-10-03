@@ -11,15 +11,17 @@ using std::isdigit;
 const string Infix_Parser::OPERATORS = "+-*/%()[]{}";
 const int Infix_Parser::PRECEDENCE[] = { 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1 };
 
-    bool is_infix(expression)
-    {
-    }
 //*******************************************************************
 // THIS NEEDS A DEFINITION
 // A function to check if the expression meets infix syntax
 // if it does not, an appropriate exception will be thrown
 // if it does, true is returned.
 //******************************************************************
+    bool Infix_Parser::is_infix(const std::string& expression)
+    {
+	return true;
+    }
+
 
 /** Evaluates the current operator.
     This function pops the two operands off the operand
