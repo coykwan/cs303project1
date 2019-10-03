@@ -23,7 +23,6 @@ private:
     std::stack<char> operator_stack;
     std::stack<int> operand_stack;
  	 #endif
-    int result;
 
     /** Determines the precedence of an operator.
         @param op The operator
