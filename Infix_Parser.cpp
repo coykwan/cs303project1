@@ -110,9 +110,9 @@ int Infix_Parser::eval(const std::string& expression)
             this->operand_stack.push(value);
         }
 
-         else if (next_token == '@')
+         else if (next_token == '~')
          {
-             
+
              int value;
 
              tokens >> value;
@@ -235,4 +235,3 @@ void Infix_Parser::process_operator(char op)
         }
     }
 }
-
