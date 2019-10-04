@@ -13,7 +13,7 @@ using namespace std;
 int main()
 {
     Infix_Parser eval;
-    cout << eval.eval("");
+    cout << eval.eval("1-1");
     cout << endl;
     return 0;
 }
