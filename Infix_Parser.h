@@ -3,7 +3,7 @@
 //  cs101Project1Local
 //
 //  Created by Coy Kwan on 10/3/19.
-//  Copyright © 2019 Coy Kwan. All rights reserved.
+//  Copyright Â© 2019 Coy Kwan. All rights reserved.
 //
 
 #ifndef INFIX_PARSER_H
@@ -23,7 +23,9 @@ private:
     
     // Data fields
     static const std::string OPERATORS;
+    static const std::string UNARY_OPS;
     static const int PRECEDENCE[];
+    int char_count = 0;
 #ifdef USEKW
     KW::stack<char> operator_stack;
     KW::stack<int> operand_stack;
