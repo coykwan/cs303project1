@@ -36,27 +36,41 @@ bool Infix_Parser::is_infix(const std::string& expression)
 	//Checks to see if there are double binary operators or a unary operator followed by a binary operator
 	for(long long unsigned int i = 1; i < expression.size(); i++)
 	{
+
+
 		if(is_operator(expression.at(i-1)) && is_operator(expression.at(i)))
 		{
-			if((expression.at(i-1) == '-' && expression.at(i) == '-')
-				|| (expression.at(i-1) == '+' && expression.at(i) == '+')
-				|| (expression.at(i-1) == '~' && expression.at(i) == '~')
-				)
+			if(expression.at(i-1) != '('
+				&& expression.at(i-1) != '{'
+				&& expression.at(i-1) != '['
+				&& expression.at(i-1) != ')'
+				&& expression.at(i-1) != '}'
+				&& expression.at(i-1) != ']')
 			{
-				break;
-			}
-			else if((expression.at(i-1) == '~' && expression.at(i) != '~')
-					&& expression.at(i) != '('
-					&& expression.at(i) != '{'
-					&& expression.at(i) != '[')
-			{
-				throw Syntax_Error("A unary operator cannot be followed by a binary operator @ char "
-						+ std::to_string(i));
-			}
-			else
-			{
-				throw Syntax_Error ("Two binary operators in a row @ char "
-						+ std::to_string(i));
+				if((expression.at(i-1) == '-' && expression.at(i) == '-')
+					|| (expression.at(i-1) == '+' && expression.at(i) == '+')
+					|| (expression.at(i-1) == '~' && expression.at(i) == '~')
+					)
+				{
+					break;
+				}
+				else if((expression.at(i-1) == '~' && expression.at(i) != '~')
+						&& expression.at(i) != '('
+						&& expression.at(i) != '{'
+						&& expression.at(i) != '[')
+				{
+					throw Syntax_Error("A unary operator cannot be followed by a binary operator @ char "
+							+ std::to_string(i));
+				}
+				else
+				{
+					if(expression.at(i) != '('
+						&& expression.at(i) != '{'
+						&& expression.at(i) != '['
+						&& expression.at(i) != ')')
+					throw Syntax_Error ("Two binary operators in a row @ char "
+							+ std::to_string(i));
+				}
 			}
 		}
 		//this else if pretty much doesn't work.
@@ -218,6 +232,7 @@ int Infix_Parser::eval(const std::string& expression)
         operator_stack.pop();
     }
     int result = operand_stack.top();
+    operand_stack.pop();
     if (!operand_stack.empty())
     {
     	throw Syntax_Error("Operand stack should be empty.");
