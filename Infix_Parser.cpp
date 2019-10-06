@@ -9,8 +9,8 @@ using std::string;
 using std::istringstream;
 using std::isdigit;
 
-const string Infix_Parser::OPERATORS = "+-~*/%()[]{}^<>";
-const int Infix_Parser::PRECEDENCE[] = { 1, 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1, 3, 0, 0};
+const string Infix_Parser::OPERATORS = "+-~*/%()[]{}^<>|&=";
+const int Infix_Parser::PRECEDENCE[] = { 1, 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1, 3, 0, 0, 0, 0, 2 };
 
 //*******************************************************************
 // THIS NEEDS A DEFINITION
@@ -72,6 +72,15 @@ void Infix_Parser::eval_op(char op)
 	case '>':
 		result = lhs > rhs;
 		break;
+	case '|':
+		result = lhs || rhs;
+		break;
+	case '&':
+		result = lhs && rhs;
+		break;
+	case '=':
+		result = lhs == rhs;
+		break;
 
 
 		//************************************************************************
@@ -112,6 +121,7 @@ int Infix_Parser::eval(const std::string& expression)
 		}
 
 
+		// Check to see if the number is a negative.
 		else if (next_token == '~')
 		{
 
@@ -123,14 +133,15 @@ int Infix_Parser::eval(const std::string& expression)
 			this->operand_stack.push(value);
 		}
 
+		// Check to see if there is a - sign. If there is, continue into the loop.
 		else if (next_token == '-')
 		{
 
-			
+			// If the stack is not empty and the top of the stack contains a '-' already, it shows we need to decrement.
 			if (!operator_stack.empty() && operator_stack.top() == '-')
 			{
 				operator_stack.pop();
-				
+
 				int value;
 
 				tokens >> value;
@@ -139,16 +150,18 @@ int Infix_Parser::eval(const std::string& expression)
 				this->operand_stack.push(value);
 			}
 
+			// If the above conditions are not met, continue to process the operators.
 			else
 			{
 				process_operator(next_token);
 			}
 		}
 
+		// Check to see if there is a '+' sign. If there is, continue into the loop.
 		else if (next_token == '+')
 		{
 
-
+			// If the stack is not empty and the top of the stack contains a '+' already, it shows we need to increment.
 			if (!operator_stack.empty() && operator_stack.top() == '+')
 			{
 				operator_stack.pop();
@@ -159,6 +172,62 @@ int Infix_Parser::eval(const std::string& expression)
 
 				value = value + 1;
 				this->operand_stack.push(value);
+			}
+
+			// If the above conditions are not met, continue to process the operators.
+			else
+			{
+				process_operator(next_token);
+			}
+		}
+
+		// Check to see if there is a '|' sign. If there is, continue into the loop.
+		else if (next_token == '|')
+		{
+
+			// If the top of the stack is not empty and the top of the stack contains a '|' already, it shows we are making an OR comparison.
+			if (!operator_stack.empty() && operator_stack.top() == '|')
+			{
+				operator_stack.pop();
+				process_operator(next_token);
+
+			}
+
+			// If the above condition is not met, continue to process the operators.
+			else
+			{
+				process_operator(next_token);
+			}
+		}
+
+		// Check to see if there is an '&' sign. If there is, continue into the loop.
+		else if (next_token == '&')
+		{
+
+			// If the stack is not empty and the top of the stack contains a '&' already, it shows we are making an AND comparison.
+			if (!operator_stack.empty() && operator_stack.top() == '&')
+			{
+				operator_stack.pop();
+				process_operator(next_token);
+
+			}
+
+			// If the above condition is not met, continue to process the operators.
+			else
+			{
+				process_operator(next_token);
+			}
+		}
+
+		else if (next_token == '=')
+		{
+
+
+			if (!operator_stack.empty() && operator_stack.top() == '=')
+			{
+				operator_stack.pop();
+				process_operator(next_token);
+
 			}
 
 			else
@@ -173,8 +242,6 @@ int Infix_Parser::eval(const std::string& expression)
 			process_operator(next_token);
 
 		}
-
-
 
 		else
 		{
@@ -288,4 +355,3 @@ void Infix_Parser::process_operator(char op)
 		}
 	}
 }
-
