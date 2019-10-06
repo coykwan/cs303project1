@@ -1,15 +1,15 @@
-//
 //  Infix_Parser.cpp
 //  cs303Project1
 //
 //  Created by Coy Kwan, Brittney Maclennan, Ami Khalsa, and Collin Thomason on 10/3/19.
-//  Copyright © 2019 Coy Kwan. All rights reserved.
+//  Copyright Â© 2019 Coy Kwan. All rights reserved.
 //
 
 
 /** Implementation of Infix_To_Postfix that processes parentheses.*/
 
 
+#include "stdafx.h"
 #include "Infix_Parser.h"
 #include <sstream>
 #include <cctype>
@@ -19,101 +19,123 @@ using std::string;
 using std::istringstream;
 using std::isdigit;
 
-const string Infix_Parser::OPERATORS = "+-~*/%()[]{}^<>|&=";
-const int Infix_Parser::PRECEDENCE[] = { 1, 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -1, 3, 0, 0, 0, 0, 2 };
+using namespace std;
+
+const string Infix_Parser::OPERATORS = "+-~*/%()[]{}^<>|&=?!$";
+//? represents increment/decrement operators
+//$ represents comparison operators
+const int Infix_Parser::PRECEDENCE[] = { 5, 5, 8, 6, 6, 6, -1, -1, -1, -1, -1, -1, 7, 4, 4, 1, 2, 3, 8, 8, 4 };
 
 //*******************************************************************
-// THIS NEEDS A DEFINITION
-// A function to check if the expression meets infix syntax
+// A function to check if the expression meets infix syntax-p0
 // if it does not, an appropriate exception will be thrown
 // if it does, true is returned.
 //******************************************************************
 
 
-//This seems to break all of our binary and logical operators 
-//******************************************************************
-//bool Infix_Parser::is_infix(const std::string& expression)
-//{
-//    //Checks if the expression starts with a binary operator.
-//    if(expression.at(0) == '+'
-//            || expression.at(0) == '-'
-//            || expression.at(0) == '/'
-//            || expression.at(0) == '*'
-//            || expression.at(0) == '^'
-//            || expression.at(0) == '%'
-//            || expression.at(0) == '<'
-//            || expression.at(0) == '>')
-//    {
-//        throw Syntax_Error ("Expression cannot start with a binary operator @ char "
-//                + std::to_string(char_count));
-//    }
-//
-//    //Checks to see if there are double binary operators or a unary operator followed by a binary operator
-//    for(long long unsigned int i = 1; i < expression.size(); i++)
-//    {
-//
-//
-//        if(is_operator(expression.at(i-1)) && is_operator(expression.at(i)))
-//        {
-//            if(expression.at(i-1) != '('
-//                && expression.at(i-1) != '{'
-//                && expression.at(i-1) != '['
-//                && expression.at(i-1) != ')'
-//                && expression.at(i-1) != '}'
-//                && expression.at(i-1) != ']')
-//            {
-//                if((expression.at(i-1) == '-' && expression.at(i) == '-')
-//                    || (expression.at(i-1) == '+' && expression.at(i) == '+')
-//                    || (expression.at(i-1) == '~' && expression.at(i) == '~')
-//                    )
-//                {
-//                    break;
-//                }
-//                else if((expression.at(i-1) == '~' && expression.at(i) != '~')
-//                        && expression.at(i) != '('
-//                        && expression.at(i) != '{'
-//                        && expression.at(i) != '[')
-//                {
-//                    throw Syntax_Error("A unary operator cannot be followed by a binary operator @ char "
-//                            + std::to_string(i));
-//                }
-//                else
-//                {
-//                    if(expression.at(i) != '('
-//                        && expression.at(i) != '{'
-//                        && expression.at(i) != '['
-//                        && expression.at(i) != ')')
-//                    throw Syntax_Error ("Two binary operators in a row @ char "
-//                            + std::to_string(i));
-//                }
-//            }
-//        }
-//        //this else if pretty much doesn't work.
-//        else if (isdigit(expression.at(i-1)))
-//       {
-//           int value;
-//           char next;
-//           istringstream tokens(expression);
-//           tokens >> value;
-//           tokens >> next;
-//           if(isdigit(next))
-//           {
-//               string find = " ";
-//               find.push_back(next);
-//               throw Syntax_Error ("Two operands in a row @ char "
-//                       + std::to_string(expression.find(find)));
-//               //returns the index of the space before the 2nd operand
-//           }
-//       }
-//    }
-//    // 4 main checks:
-//    // a) 2 operands in a row (sorta)
-//    // b) 2 binary operators in a row (done)
-//    // c) can't start with binary operator (done)
-//    // d) unary operator can't be followed by a binary operator (done)
-//    return true;
-//}
-//******************************************************************
+bool Infix_Parser::is_infix(const std::string& expression)
+{
+	//Checks if the expression starts with a binary operator.
+	if (expression.at(0) == '+'
+		|| expression.at(0) == '-'
+		|| expression.at(0) == '/'
+		|| expression.at(0) == '*'
+		|| expression.at(0) == '^'
+		|| expression.at(0) == '%'
+		|| expression.at(0) == '<'
+		|| expression.at(0) == '>'
+		|| (expression.at(0) == '|' && expression.at(1) == '|')
+		|| (expression.at(0) == '&' && expression.at(1) == '&')
+		|| (expression.at(0) == '=' && expression.at(1) == '='))
+	{
+		if (expression.at(0) != expression.at(1))
+		{
+			throw Syntax_Error("Expression cannot start with a binary operator @ char 0");
+		}
+		else if (expression.at(0) == '|' || expression.at(0) == '&' || expression.at(0) == '=')
+		{
+			throw Syntax_Error("Expression cannot start with a binary operator @ char 0");
+		}
+	}
+
+	//Checks to see if there are double binary operators or a unary operator followed by a binary operator
+	for (long long unsigned int i = 1; i < expression.size(); i++)
+	{
+		if (is_operator(expression.at(i - 1)) && is_operator(expression.at(i)))
+		{
+			if (expression.at(i - 1) != '('
+				&& expression.at(i - 1) != '{'
+				&& expression.at(i - 1) != '['
+				&& expression.at(i - 1) != ')'
+				&& expression.at(i - 1) != '}'
+				&& expression.at(i - 1) != ']')
+			{
+				if (((expression.at(i - 1) == expression.at(i))
+					&& (expression.at(i - 1) == '-'
+						|| (expression.at(i - 1) == '+')
+						|| (expression.at(i - 1) == '~')
+						|| (expression.at(i - 1) == '|')
+						|| (expression.at(i - 1) == '&')
+						|| (expression.at(i - 1) == '=')))
+					|| ((expression.at(i - 1) == '<'
+						|| expression.at(i - 1) == '>')
+						&& expression.at(i) == '='))
+				{
+					break;
+				}
+				else if ((expression.at(i - 1) == '~' && expression.at(i) != '~')
+					&& expression.at(i) != '('
+					&& expression.at(i) != '{'
+					&& expression.at(i) != '[')
+				{
+					throw Syntax_Error("A unary operator cannot be followed by a binary operator @ char "
+						+ std::to_string(i));
+				}
+				else
+				{
+					if (expression.at(i) != '('
+						&& expression.at(i) != '{'
+						&& expression.at(i) != '['
+						&& expression.at(i) != ')')
+						throw Syntax_Error("Two binary operators in a row @ char "
+							+ std::to_string(i));
+				}
+			}
+		}
+		
+		// If an expression starts with an opening paranthese, allow it.
+		else if (expression.at(0) == '(')
+		{
+			return true;
+		}
+
+		// If there is a negative number in the expression, allow it.
+		else if (is_operator(expression.at(i - 1)) && isdigit(expression.at(i)))
+		{
+			return true;
+		}
+
+		// If the operation starts with a number, allow it.
+		else if (isdigit(expression.at(i - 1)))
+		{
+			int value;
+			char next;
+			istringstream tokens(expression);
+			tokens >> value;
+			tokens >> next;
+			if (isdigit(next))
+			{
+				string find = " ";
+				find.push_back(next);
+				throw Syntax_Error("Two operands in a row @ char "
+					+ std::to_string(expression.find(find)));
+				//returns the index of the space before the 2nd operand
+			}
+		}
+	}
+
+	return true;
+}
 
 
 
@@ -127,60 +149,100 @@ stack and applies the operator.
 
 void Infix_Parser::eval_op(char op)
 {
-
 	if (this->operand_stack.empty())
-		throw Syntax_Error("Operand stack is empty");
+		throw Syntax_Error("Operand stack is empty.");
 
 	int rhs = this->operand_stack.top();
-	this->operand_stack.pop();
 
-	if (this->operand_stack.empty())
-		throw Syntax_Error("Operand stack is empty");
-
-	int lhs = this->operand_stack.top();
 	this->operand_stack.pop();
 	int result = 0;
-	switch (op)
+
+	if (op == '?' || op == '$')
 	{
-	case '+':
-		result = lhs + rhs;
-		break;
-	case '-':
-		result = lhs - rhs;
-		break;
-	case '*':
-		result = lhs * rhs;
-		break;
-	case '/':
-		result = lhs / rhs;
-		break;
-	case '%':
-		result = lhs % rhs;
-		break;
-	case '^':
-		result = pow(lhs, rhs);
-		break;
-	case '<':
-		result = lhs < rhs;
-		break;
-	case '>':
-		result = lhs > rhs;
-		break;
-	case '|':
-		result = lhs || rhs;
-		break;
-	case '&':
-		result = lhs && rhs;
-		break;
-	case '=':
-		result = lhs == rhs;
-		break;
+		operator_stack.pop();
+		switch (operator_stack.top())
+		{
+		case '+':
+			result = rhs + 1;
+			break;
+		case '-':
+			result = rhs - 1;
+			break;
+		default:
+			op = operator_stack.top();
 
+			if (this->operand_stack.empty())
+				throw Syntax_Error("Operand stack is empty.");
 
+			int lhs = this->operand_stack.top();
+			this->operand_stack.pop();
+
+			switch (op)
+			{
+			case '|':
+				result = lhs || rhs;
+				break;
+			case '&':
+				result = (lhs && rhs);
+				break;
+			case '=':
+				result = (lhs == rhs);
+				break;
+			case '<':
+				result = lhs <= rhs;
+				break;
+			case '>':
+				result = lhs >= rhs;
+			}
+			break;
+		}
+	}
+	else if (op == '~')
+	{
+		result = -rhs;
+	}
+	else if (op == '!')
+	{
+		result = !rhs;
+	}
+	else
+	{
+		if (this->operand_stack.empty())
+			throw Syntax_Error("Operand stack is empty.REALLY??");
+
+		int lhs = this->operand_stack.top();
+		this->operand_stack.pop();
+
+		switch (op)
+		{
+		case '+':
+			result = lhs + rhs;
+			break;
+		case '-':
+			result = lhs - rhs;
+			break;
+		case '*':
+			result = lhs * rhs;
+			break;
+		case '/':
+			result = lhs / rhs;
+			break;
+		case '%':
+			result = lhs % rhs;
+			break;
+		case '^':
+			result = pow(lhs, rhs);
+			break;
+		case '<':
+			result = lhs < rhs;
+			break;
+		case '>':
+			result = lhs > rhs;
+			break;
+
+		}
 		//************************************************************************
 		//NEED TO ADD OTHER OPERATORS HERE!!!!
-		//Probably going to want to have a check for Binary vs Unary operators
-		//And set up another switch case for the unary ones!
 		//************************************************************************
 	}
 	operand_stack.push(result);
@@ -204,137 +266,65 @@ int Infix_Parser::eval(const std::string& expression)
 	char next_token;
 	while (tokens >> next_token)
 	{
-
+		char repeated_operator;
 		if (isdigit(next_token))
 		{
+
 			tokens.putback(next_token);
 			int value;
 
 			tokens >> value;
 			this->operand_stack.push(value);
 		}
-
-
-		// Check to see if the number is a negative.
-		else if (next_token == '~')
-		{
-
-			int value;
-
-			tokens >> value;
-
-			value = -(value);
-			this->operand_stack.push(value);
-		}
-
-		// Check to see if there is a - sign. If there is, continue into the loop.
-		else if (next_token == '-')
-		{
-
-			// If the stack is not empty and the top of the stack contains a '-' already, it shows we need to decrement.
-			if (!operator_stack.empty() && operator_stack.top() == '-')
-			{
-				operator_stack.pop();
-
-				int value;
-
-				tokens >> value;
-
-				value = value - 1;
-				this->operand_stack.push(value);
-			}
-
-			// If the above conditions are not met, continue to process the operators.
-			else
-			{
-				process_operator(next_token);
-			}
-		}
-
-		// Check to see if there is a '+' sign. If there is, continue into the loop.
-		else if (next_token == '+')
-		{
-
-			// If the stack is not empty and the top of the stack contains a '+' already, it shows we need to increment.
-			if (!operator_stack.empty() && operator_stack.top() == '+')
-			{
-				operator_stack.pop();
-
-				int value;
-
-				tokens >> value;
-
-				value = value + 1;
-				this->operand_stack.push(value);
-			}
-
-			// If the above conditions are not met, continue to process the operators.
-			else
-			{
-				process_operator(next_token);
-			}
-		}
-
-		// Check to see if there is a '|' sign. If there is, continue into the loop.
-		else if (next_token == '|')
-		{
-
-			// If the top of the stack is not empty and the top of the stack contains a '|' already, it shows we are making an OR comparison.
-			if (!operator_stack.empty() && operator_stack.top() == '|')
-			{
-				operator_stack.pop();
-				process_operator(next_token);
-
-			}
-
-			// If the above condition is not met, continue to process the operators.
-			else
-			{
-				process_operator(next_token);
-			}
-		}
-
-		// Check to see if there is an '&' sign. If there is, continue into the loop.
-		else if (next_token == '&')
-		{
-
-			// If the stack is not empty and the top of the stack contains a '&' already, it shows we are making an AND comparison.
-			if (!operator_stack.empty() && operator_stack.top() == '&')
-			{
-				operator_stack.pop();
-				process_operator(next_token);
-
-			}
-
-			// If the above condition is not met, continue to process the operators.
-			else
-			{
-				process_operator(next_token);
-			}
-		}
-
-		else if (next_token == '=')
-		{
-
-
-			if (!operator_stack.empty() && operator_stack.top() == '=')
-			{
-				operator_stack.pop();
-				process_operator(next_token);
-
-			}
-
-			else
-			{
-				process_operator(next_token);
-			}
-		}
-
 		else if (is_operator(next_token))
 		{
+			tokens >> repeated_operator;
 
-			process_operator(next_token);
+			//If the next character is a repeated operator, process the first and then process '?'
+			if (is_operator(repeated_operator) && repeated_operator == next_token)
+			{
+				// As long as there is a repeated operataor already on the stack, continue.
+				if (!operator_stack.empty()) 
+				{
+				
+					// If that repeated operator is for an increment or a decrement, continue.
+					if (operator_stack.top() == '?')
+					{
+						// This will allow ++++ to function and increase the number by the appropriate amount.
+						if (repeated_operator == '+')
+						{
+							tokens.putback(next_token);
+							int value;
 
+							tokens >> value;
+							value = value + 1;
+							this->operand_stack.push(value);
+						}
+						
+					}
+					
+					
+				}
+					
+				else {
+
+					process_operator(next_token);
+					operator_stack.push('?');
+				}
+			}
+
+			else if (is_operator(repeated_operator) && repeated_operator == '=')
+			{
+				process_operator(next_token);
+				operator_stack.push('$');
+			}
+
+			//Otherwise, put the next character back and just process the first
+			else
+			{
+				tokens.putback(repeated_operator);
+				process_operator(next_token);
+			}
 		}
 
 		else
@@ -352,8 +342,6 @@ int Infix_Parser::eval(const std::string& expression)
 		{
 			throw Syntax_Error("Unmatched open parenthesis");
 		}
-		// EVALUATE ANY REMAINING OPERATORS
-
 		else
 		{
 			eval_op(op);
@@ -407,7 +395,8 @@ void Infix_Parser::process_operator(char op)
 			//         top of stack is '(' or current
 			//         operator precedence > top of stack operator
 			//         precedence;
-			if (op == ')') {
+			if (op == ')')
+			{
 				if (!operator_stack.empty()
 					&& (operator_stack.top() == '('))
 				{
