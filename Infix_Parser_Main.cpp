@@ -1,4 +1,12 @@
-#include "stdafx.h"
+//
+// Infix_Parser_Main.cpp
+//  cs303Project1
+//
+//  Created by Coy Kwan, Brittney Maclennan, Ami Khalsa, and Collin Thomason on 10/3/19.
+//  Copyright © 2019 Coy Kwan. All rights reserved.
+//
+
+
 #include <iostream>
 #include "Infix_Parser.h"
 
@@ -44,8 +52,6 @@ int main()
 
 	cout << endl << endl;
 
-
-	system("pause");
 	return 0;
 }
 

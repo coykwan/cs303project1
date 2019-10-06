@@ -1,9 +1,8 @@
 //
 //  Syntax_Error.h
-//  cs101Project1Local
+//  cs303Project1
 //
-//  Created by Coy Kwan on 10/3/19.
-//  Copyright © 2019 Coy Kwan. All rights reserved.
+//  Created by Coy Kwan, Brittney Maclennan, Ami Khalsa, and Collin Thomason on 10/3/19.//  Copyright © 2019 Coy Kwan. All rights reserved.
 //
 
 #ifndef SYNTAX_ERROR_H_

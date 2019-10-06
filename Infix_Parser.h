@@ -1,9 +1,8 @@
 //
-//  Infix_Parser.hpp
-//  cs101Project1Local
+//  Infix_Parser.h
+//  cs303Project1
 //
-//  Created by Coy Kwan on 10/3/19.
-//  Copyright Â© 2019 Coy Kwan. All rights reserved.
+//  Created by Coy Kwan, Brittney Maclennan, Ami Khalsa, and Collin Thomason on 10/3/19.//  Copyright © 2019 Coy Kwan. All rights reserved.
 //
 
 #ifndef INFIX_PARSER_H
@@ -25,7 +24,8 @@ private:
     static const std::string OPERATORS;
     static const std::string UNARY_OPS;
     static const int PRECEDENCE[];
-    int char_count = 0;
+    int char_count;
+
 #ifdef USEKW
     KW::stack<char> operator_stack;
     KW::stack<int> operand_stack;

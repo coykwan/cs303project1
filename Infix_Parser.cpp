@@ -1,10 +1,20 @@
+//
+//  Infix_Parser.cpp
+//  cs303Project1
+//
+//  Created by Coy Kwan, Brittney Maclennan, Ami Khalsa, and Collin Thomason on 10/3/19.
+//  Copyright © 2019 Coy Kwan. All rights reserved.
+//
+
+
 /** Implementation of Infix_To_Postfix that processes parentheses.*/
 
-#include "stdafx.h"
+
 #include "Infix_Parser.h"
 #include <sstream>
 #include <cctype>
 #include <iostream>
+#include <cmath>
 using std::string;
 using std::istringstream;
 using std::isdigit;
@@ -18,10 +28,94 @@ const int Infix_Parser::PRECEDENCE[] = { 1, 1, 1, 2, 2, 2, -1, -1, -1, -1, -1, -
 // if it does not, an appropriate exception will be thrown
 // if it does, true is returned.
 //******************************************************************
-bool Infix_Parser::is_infix(const std::string& expression)
-{
-	return true;
-}
+
+
+//This seems to break all of our binary and logical operators 
+//******************************************************************
+//bool Infix_Parser::is_infix(const std::string& expression)
+//{
+//    //Checks if the expression starts with a binary operator.
+//    if(expression.at(0) == '+'
+//            || expression.at(0) == '-'
+//            || expression.at(0) == '/'
+//            || expression.at(0) == '*'
+//            || expression.at(0) == '^'
+//            || expression.at(0) == '%'
+//            || expression.at(0) == '<'
+//            || expression.at(0) == '>')
+//    {
+//        throw Syntax_Error ("Expression cannot start with a binary operator @ char "
+//                + std::to_string(char_count));
+//    }
+//
+//    //Checks to see if there are double binary operators or a unary operator followed by a binary operator
+//    for(long long unsigned int i = 1; i < expression.size(); i++)
+//    {
+//
+//
+//        if(is_operator(expression.at(i-1)) && is_operator(expression.at(i)))
+//        {
+//            if(expression.at(i-1) != '('
+//                && expression.at(i-1) != '{'
+//                && expression.at(i-1) != '['
+//                && expression.at(i-1) != ')'
+//                && expression.at(i-1) != '}'
+//                && expression.at(i-1) != ']')
+//            {
+//                if((expression.at(i-1) == '-' && expression.at(i) == '-')
+//                    || (expression.at(i-1) == '+' && expression.at(i) == '+')
+//                    || (expression.at(i-1) == '~' && expression.at(i) == '~')
+//                    )
+//                {
+//                    break;
+//                }
+//                else if((expression.at(i-1) == '~' && expression.at(i) != '~')
+//                        && expression.at(i) != '('
+//                        && expression.at(i) != '{'
+//                        && expression.at(i) != '[')
+//                {
+//                    throw Syntax_Error("A unary operator cannot be followed by a binary operator @ char "
+//                            + std::to_string(i));
+//                }
+//                else
+//                {
+//                    if(expression.at(i) != '('
+//                        && expression.at(i) != '{'
+//                        && expression.at(i) != '['
+//                        && expression.at(i) != ')')
+//                    throw Syntax_Error ("Two binary operators in a row @ char "
+//                            + std::to_string(i));
+//                }
+//            }
+//        }
+//        //this else if pretty much doesn't work.
+//        else if (isdigit(expression.at(i-1)))
+//       {
+//           int value;
+//           char next;
+//           istringstream tokens(expression);
+//           tokens >> value;
+//           tokens >> next;
+//           if(isdigit(next))
+//           {
+//               string find = " ";
+//               find.push_back(next);
+//               throw Syntax_Error ("Two operands in a row @ char "
+//                       + std::to_string(expression.find(find)));
+//               //returns the index of the space before the 2nd operand
+//           }
+//       }
+//    }
+//    // 4 main checks:
+//    // a) 2 operands in a row (sorta)
+//    // b) 2 binary operators in a row (done)
+//    // c) can't start with binary operator (done)
+//    // d) unary operator can't be followed by a binary operator (done)
+//    return true;
+//}
+//******************************************************************
+
+
 
 
 /** Evaluates the current operator.
@@ -355,3 +449,4 @@ void Infix_Parser::process_operator(char op)
 		}
 	}
 }
+/** Implementation of Infix_To_Postfix that processes parentheses.*/
